@@ -36,16 +36,16 @@ contains
 end module linalg
 
 
-program test_module
+! program test_module
 
-	use linalg
-	implicit none
-	real, dimension(3) :: r1, r2, r3
+	! use linalg
+	! implicit none
+	! real, dimension(3) :: r1, r2, r3
 	
-	r1 = (/ 1.0, 2.0, 3.0 /)
-	r2 = (/ 5.0, 7.0, -2.0 /)
+	! r1 = (/ 1.0, 2.0, 3.0 /)
+	! r2 = (/ 5.0, 7.0, -2.0 /)
 	
-	r3 = crossproduct(r1, r2)
-	print*, r3
+	! r3 = crossproduct(r1, r2)
+	! print*, r3
 	
-end program test_module
+! end program test_module

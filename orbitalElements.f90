@@ -4,6 +4,10 @@
 ! Yuri Shimane, Georgia Institute of Technology
 ! 2021.06.17
 !
+! Compiling:
+!
+!   > gfortran linalg.f90 orbitalElements.f90
+!
 
 ! -----------------------------------------------------------
 module orbitalElements
@@ -14,29 +18,6 @@ module orbitalElements
 	public :: state2h, state2sma, state2ecc
 	
 contains
-	
-	! ! -----------------------------------------
-	! ! Compute cross-product
-	! function crossproduct(v1,v2) result(v3)
-		! implicit none
-		! real, dimension(3), intent(in) :: v1, v2
-		! real, dimension(3) :: v3
-		! v3(1) = v1(2) * v2(3) - v1(3) * v2(2)
-		! v3(2) = v1(3) * v2(1) - v1(1) * v2(3)
-		! v3(3) = v1(1) * v2(2) - v1(2) * v2(1)
-	! end function crossproduct
-	
-	
-	! ! ----------------------------------------
-	! ! Compute 2-norm of 3-element vector
-	! function norm2_vec3(vector) result(norm_val)
-		! implicit none
-		! real, dimension(3) :: vector
-		! real :: norm_val
-		
-		! norm_val = (vector(1)**2 + vector(2)**2 + vector(3)**2)**0.5
-	! end function norm2_vec3
-	
 	
 	! -----------------------------------------
 	! Convert state to angular momentum vector
