@@ -6,7 +6,13 @@ Fortran astrodynamics routines
 Compiling: 
 
 ```bash
-> gfortran linalg.f90 orbitalElements.f90
+> gfortran linalg.f90 orbitalelements.f90
+```
+
+or specifying the output executable name:
+
+```bash
+> gfortran -o orbel linalg.f90 orbitalelements.f90
 ```
 
 then executing:
