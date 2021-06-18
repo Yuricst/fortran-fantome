@@ -6,7 +6,7 @@ module linalg
 
 	implicit none
 	private
-	public :: crossproduct, norm2_vec3
+	public :: crossproduct, norm2_vec3, dot_vec3
 
 contains
 
@@ -32,6 +32,16 @@ contains
 		norm_val = (vector(1)**2 + vector(2)**2 + vector(3)**2)**0.5
 	end function norm2_vec3
 	
+	! ----------------------------------------
+	! Compute dor product of 3-element vector
+	function dot_vec3(v1, v2) result(dotpro)
+		implicit none
+		real, dimension(3) :: v1, v2
+		real :: dotpro
+		
+		dotpro = v1(1)*v2(1) + v1(2)*v2(2) + v1(3)*v2(3)
+		
+	end function dot_vec3
 
 end module linalg
 
