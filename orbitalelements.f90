@@ -13,12 +13,13 @@
 !
 
 ! -----------------------------------------------------------
-module orbitalElements
+module orbitalelements
 
 	use linalg
 	implicit none
 	private
 	public :: state2h, state2sma, state2ecc, state2inc, state2raan, state2aop, state2ta
+	public :: state2kepelts
 	public :: rad2deg, deg2rad
 	real(16), parameter :: pi_16 = 4 * atan (1.0_16)
 	
@@ -155,6 +156,7 @@ contains
 		angle_deg = angle * 180.0 / pi_16
 	end function rad2deg
 	
+	
 	! convert angle from degrees to radians
 	function deg2rad(angle) result(angle_rad)
 		implicit none
@@ -163,16 +165,33 @@ contains
 		angle_rad = angle * pi_16 / 180.0
 	end function deg2rad
 	
-end module orbitalElements
+	
+	! subroutine to obtain orbital elements
+	subroutine state2kepelts(state, mu, kepelts)
+		implicit none 
+		real, dimension(6) :: state, kepelts
+		real :: mu
+		
+		! in order: sma, inc, raan, ecc, aop, ta
+		kepelts(1) = state2sma(state, mu)
+		kepelts(2) = state2inc(state)
+		kepelts(3) = state2raan(state)
+		kepelts(4) = state2ecc(state, mu)
+		kepelts(5) = state2aop(state, mu)
+		kepelts(6) = state2ta(state, mu)
+		
+	end subroutine
+	
+end module orbitalelements
 
 
 ! -----------------------------------------------------------
 program test_orbel
 
-	use orbitalElements
+	use orbitalelements
 	implicit none
 	integer :: foo, bar
-	real, dimension(6) :: state
+	real, dimension(6) :: state, kepelts
 	real :: mu, sma, ecc, inc, raan, aop, ta
 	
 	mu = 1.0
@@ -192,6 +211,10 @@ program test_orbel
 	print*, "raan: ", raan
 	print*, "aop:  ", aop
 	print*, "ta:   ", ta
+	
+	! getting all elements from subroutine
+	call state2kepelts(state, mu, kepelts)
+	print*, kepelts
 	
 end program test_orbel
 	
