@@ -12,13 +12,13 @@ Compiling:
 or specifying the output executable name:
 
 ```bash
-> gfortran -o orbel linalg.f90 orbitalelements.f90
+$ gfortran -o orbel linalg.f90 orbitalelements.f90
 ```
 
 then executing:
 
 ```bash
-> a.exe
+$ a.exe
 ```
 
 ### Usage via Python
@@ -26,8 +26,8 @@ then executing:
 Prepare the module for python with 
 
 ```bash
-f2py -c primes.f95 -m primes
-python -m numpy.f2py -c primes.f95 -m primes
+$ f2py -c primes.f95 -m primes
+$ python -m numpy.f2py -c primes.f95 -m primes
 ```
 
 then use in python:
