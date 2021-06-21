@@ -35,5 +35,5 @@ then use in python:
 import orbel
 state = [1.0 ,0.0, 0.01, 0.0, 1.0, 0.0]
 mu = 1.0
-orbel.orbitalelements.state2kepelts(state, mu)
+kepelts = orbel.orbitalelements.state2kepelts(state, mu)
 ```
