@@ -26,8 +26,8 @@ $ a.exe
 Prepare the module for python with 
 
 ```bash
-$ f2py -c primes.f95 -m primes
-$ python -m numpy.f2py -c primes.f95 -m primes
+$ f2py -c linalg.90 orbitalelements.f90 -m orbel
+$ python -m numpy.f2py -c linalg.90 orbitalelements.f90 -m orbel
 ```
 
 then use in python:
