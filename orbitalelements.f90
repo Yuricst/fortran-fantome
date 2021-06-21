@@ -166,11 +166,14 @@ contains
 	end function deg2rad
 	
 	
+	subroutine state2kepelts(kepelts, state, mu)
+	! =======================================
 	! subroutine to obtain orbital elements
-	subroutine state2kepelts(state, mu, kepelts)
-		implicit none 
-		real, dimension(6) :: state, kepelts
-		real :: mu
+	! =======================================
+		!implicit none 
+		real, dimension(6), intent(in) :: state
+		real, intent(in) :: mu
+		real, dimension(6), intent(out) :: kepelts
 		
 		! in order: sma, inc, raan, ecc, aop, ta
 		kepelts(1) = state2sma(state, mu)
@@ -213,7 +216,7 @@ program test_orbel
 	print*, "ta:   ", ta
 	
 	! getting all elements from subroutine
-	call state2kepelts(state, mu, kepelts)
+	call state2kepelts(kepelts, state, mu)
 	print*, kepelts
 	
 end program test_orbel
