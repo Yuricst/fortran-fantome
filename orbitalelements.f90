@@ -25,9 +25,10 @@ module orbitalelements
 	
 contains
 	
-	! -----------------------------------------
-	! Convert state to angular momentum vector
 	function state2h(state) result(hvec)
+	! =========================================
+	! Convert state to angular momentum vector
+	! =========================================
 		implicit none
 		real, dimension(6), intent(in) :: state
 		real, dimension(3) :: hvec
@@ -35,9 +36,10 @@ contains
 	end function state2h
 	
 	
-	! -----------------------------------------
-	! Convert state to eccentricity vector
 	function state2ecc(state, mu) result(ecc)
+	! =======================================
+	! Convert state to eccentricity vector
+	! =======================================
 		implicit none
 		real, dimension(6), intent(in) :: state
 		real, intent(in) :: mu
@@ -50,9 +52,10 @@ contains
 	end function state2ecc
 	
 	
-	! -----------------------------------------
-	! Convert state to semi-major axis
 	function state2sma(state, mu) result(sma)
+	! =======================================
+	! Convert state to semi-major axis
+	! =======================================
 		implicit none
 		real, dimension(6), intent(in) :: state
 		real, intent(in) :: mu
@@ -63,10 +66,11 @@ contains
 		sma = h**2 / (mu*(1 - ecc**2))
 	end function state2sma
 	
-	
-	! -----------------------------------------
-	! Convert state to inclination
+
 	function state2inc(state) result(inc)
+	! =======================================
+	! Convert state to inclination
+	! =======================================
 		implicit none
 		real, dimension(6), intent(in) :: state
 		real, dimension(3) :: hvec
@@ -78,9 +82,10 @@ contains
 	end function state2inc
 	
 	
-	! -----------------------------------------
-	! Convert state to raan
 	function state2raan(state) result(raan)
+	! =======================================
+	! Convert state to raan
+	! =======================================
 		implicit none
 		real, dimension(6), intent(in) :: state
 		real, dimension(3) :: hvec, zdir, ndir
@@ -99,9 +104,10 @@ contains
 	end function state2raan
 	
 	
-	! -----------------------------------------
-	! Convert state to argument of periapsis
 	function state2aop(state, mu) result(aop)
+	! =======================================
+	! Convert state to argument of periapsis
+	! =======================================
 		implicit none
 		real, dimension(6), intent(in) :: state
 		real, intent(in) :: mu
@@ -124,10 +130,11 @@ contains
 		
 	end function state2aop
 	
-	
-	! -----------------------------------------
-	! Convert state to true anomaly
+
 	function state2ta(state, mu) result(ta)
+	! =======================================
+	! Convert state to true anomaly
+	! =======================================
 		implicit none
 		real, dimension(6), intent(in) :: state
 		real, intent(in) :: mu
@@ -147,9 +154,11 @@ contains
 		
 	end function state2ta
 	
-	
-	! convert angle from radian to degrees
+
 	function rad2deg(angle) result(angle_deg)
+	! =======================================
+	! Convert angle from radian to degrees
+	! =======================================
 		implicit none
 		real, intent(in) :: angle
 		real :: angle_deg
@@ -157,8 +166,10 @@ contains
 	end function rad2deg
 	
 	
-	! convert angle from degrees to radians
 	function deg2rad(angle) result(angle_rad)
+	! =======================================
+	! Convert angle from degrees to radians
+	! =======================================
 		implicit none
 		real, intent(in) :: angle
 		real :: angle_rad
@@ -167,9 +178,11 @@ contains
 	
 	
 	subroutine state2kepelts(kepelts, state, mu)
-	! =======================================
-	! subroutine to obtain orbital elements
-	! =======================================
+	! ============================================
+	! Obtain keplerian elements from state-vector
+	!
+	! elements order: [sma, inc, raan, ecc, aop, ta]
+	! ============================================
 		!implicit none 
 		real, dimension(6), intent(in) :: state
 		real, intent(in) :: mu
