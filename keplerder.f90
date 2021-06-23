@@ -131,7 +131,7 @@ contains
 		implicit none
 		real(wp), dimension(6), intent(in)  :: state0
 		real(wp), intent(in)                :: mu, t0, t, tol
-		integer, intent(in)             :: maxiter
+		integer, intent(in)                 :: maxiter
 		real(wp), dimension(6), intent(out) :: state1
 		
 		real(wp) :: alpha, sigma0, sqrt_mu, ecc, x0, x1, fun, dfun, d2fun, r0_norm, v0_norm
@@ -166,6 +166,7 @@ contains
 		do while (counter < maxiter)
 			! compute kepler-der function
 			f_derivs_array = kepler_der_function(x0, alpha, t, t0, sqrt_mu, r0_norm, sigma0)
+			print*, "fs: ", f_derivs_array
 			fun   = f_derivs_array(1)
 			dfun  = f_derivs_array(2)
 			d2fun = f_derivs_array(3)
@@ -232,12 +233,12 @@ program test_keplerder
 	print*, "Testing Kepler-Der module"
 
 	! initial values
-	mu = 1.0
-	t0 = 0.0
-	t = 3.14
-	tol = 1E-12
+	mu = 1.0_wp
+	t0 = 0.0_wp
+	t = 3.14_wp
+	tol = 1E-12_wp
 	maxiter = 20
-	state0 = (/ 1.01, 0.0, 0.2, 0.0, 0.98, 0.067 /)
+	state0 = [ 1.01_wp, 0.0_wp, 0.2_wp, 0.0_wp, 0.98_wp, 0.067_wp ]
 	
 	! call subroutine
 	print*, "state0: "

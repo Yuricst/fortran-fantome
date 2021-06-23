@@ -50,7 +50,7 @@ contains
 		real(wp) :: ecc
 		
 		hvec = crossproduct(state(1:3), state(4:6))
-    ecc_vec = (1/mu) * crossproduct(state(4:6),hvec) - state(1:3)/norm2_vec3(state(1:3))
+		ecc_vec = (1/mu) * crossproduct(state(4:6),hvec) - state(1:3)/norm2_vec3(state(1:3))
 		ecc = norm2_vec3(ecc_vec)
 	end function state2ecc
 	
@@ -142,7 +142,7 @@ contains
 		real(wp), dimension(6), intent(in) :: state
 		real(wp), intent(in) :: mu
 		real(wp), dimension(3) :: evec, hvec
-		real ta, vr
+		real(wp) ta, vr
 		
 		hvec = crossproduct(state(1:3), state(4:6))
 		evec = (1/mu) * crossproduct(state(4:6),hvec) - state(1:3)/norm2_vec3(state(1:3))
