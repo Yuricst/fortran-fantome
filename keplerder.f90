@@ -14,6 +14,7 @@ module keplerder
 	implicit none
 	private
 	public :: propagate
+	public :: test1
 	public :: universal_functions, hypertrig_c, hypertrig_s, kepler_der_function, lagrange_coefficients
 	integer, parameter :: wp = real64
 	
@@ -87,18 +88,13 @@ contains
 		real(wp), intent(in) :: x, alpha, t, t0, sqrt_mu, r0_norm, sigma0
 		real(wp), dimension(3) :: f_derivs_array
 		real(wp), dimension(4) :: us
-		real(wp) :: u0, u1, u2, u3
 		real(wp) :: fun, dfun, d2fun
 		
 		us = universal_functions(x, alpha)
-		u0 = us(1)
-		u1 = us(2)
-		u2 = us(3)
-		u3 = us(4)
 		
-		fun   = r0_norm*u1 + sigma0*u2 + u3 - sqrt_mu * (t - t0)
-		dfun  = r0_norm*u0 + sigma0*u1 + u2
-		d2fun = sigma0*u0 + (1 - alpha*r0_norm)*u1
+		fun   = r0_norm*us(2) + sigma0*us(3) + us(4) - sqrt_mu * (t - t0)
+		dfun  = r0_norm*us(1) + sigma0*us(2) + us(3)
+		d2fun = sigma0*us(1) + (1 - alpha*r0_norm)*us(2)
 		f_derivs_array = (/ fun, dfun, d2fun /)
 		 
 	end function kepler_der_function
@@ -124,7 +120,7 @@ contains
 	end function lagrange_coefficients
 	
 	
-	subroutine propagate(state1, mu, state0, t0, t, tol, maxiter)
+	subroutine propagate(state1, mu, state0, t0, t, tol, maxiter) bind(c, name="propagate")
 	! ================================
 	! Kepler-Der propagation of state
 	! ================================
@@ -148,8 +144,8 @@ contains
 		sqrt_mu = sqrt(mu)
 		r0_norm = norm2_vec3(state0(1:3))
 		v0_norm = norm2_vec3(state0(4:6))
-		alpha = 1/state2sma(state0, mu)
-		sigma0 = dot_vec3(state0(1:3), state0(4:6)) / sqrt_mu
+		alpha   = 1/state2sma(state0, mu)
+		sigma0  = dot_vec3(state0(1:3), state0(4:6)) / sqrt_mu
 	
 		! -------------------------------
 		! ITERATE LAGUERRE-CONWAY METHOD
@@ -166,7 +162,6 @@ contains
 		do while (counter < maxiter)
 			! compute kepler-der function
 			f_derivs_array = kepler_der_function(x0, alpha, t, t0, sqrt_mu, r0_norm, sigma0)
-			print*, "fs: ", f_derivs_array
 			fun   = f_derivs_array(1)
 			dfun  = f_derivs_array(2)
 			d2fun = f_derivs_array(3)
@@ -189,7 +184,6 @@ contains
 		u1 = us(2)
 		u2 = us(3)
 		u3 = us(4)
-		!print*, "u0~u3: ", us
 		
 		r_scal = r0_norm*u0 + sigma0*u1 + u2
 		sigma = sigma0*u0 + (1 - alpha*r0_norm)*u1
@@ -209,10 +203,35 @@ contains
 			statemap(3+i,i)   = fdot
 			statemap(3+i,3+i) = gdot
 		end do
-		
+		! propagate state
 		state1 = matmul(statemap, state0)
 		
 	end subroutine propagate
+	
+	
+	! subroutine testmod(b, n) bind(c, name="testmod")
+		! implicit none
+		! real*8, intent(in) :: n
+		! real*8, intent(out) :: b
+		! print*, "Hello world!!"
+		! b = 2*n
+	! end subroutine testmod
+	
+	subroutine test1(n,a,b,c) bind(c, name="test1")
+		implicit none
+		integer , intent(in) :: n
+		real*8, intent(in) :: a
+		real*8, intent(out) :: b, c
+
+		b = a**n
+		c = n*a
+
+		! 確認
+		print *, "b = ",b
+		print *, "c = ",c
+
+		return
+	end subroutine test1
 	
 end module keplerder
 
