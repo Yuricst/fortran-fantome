@@ -24,7 +24,7 @@ module orbitalelements
 	public :: rad2deg, deg2rad
 	
 	integer, parameter :: wp = real64
-	real(wp), parameter :: pi_16 = 4 * atan (1.0_16)
+	real(wp), parameter :: pi_16 = 4.0_wp * atan (1.0_wp)
 	
 contains
 	

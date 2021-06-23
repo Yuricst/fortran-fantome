@@ -39,4 +39,8 @@ print(state2)
 
 
 # measure time
+n_test = 100
 tstart = time.time()
+for i in range(n_test):
+	_ = keplerder.propagate(mu, state0, t0, t, tol, maxiter)
+tend = time.time()
