@@ -7,13 +7,16 @@
 
 module keplerder
 	
+	use, intrinsic :: iso_fortran_env,    only: real64
 	use linalg
 	use orbitalelements
+	
 	implicit none
 	private
 	public :: propagate
 	public :: universal_functions, hypertrig_c, hypertrig_s, kepler_der_function, lagrange_coefficients
-
+	integer, parameter :: wp = real64
+	
 contains
 
 	function universal_functions(x, alpha) result(us)
@@ -21,9 +24,9 @@ contains
 	! Evaluate universal functions
 	! =============================
 		implicit none
-		real, intent(in) :: x, alpha
-		real, dimension(4) :: us
-		real :: u0, u1, u2, u3, S, C
+		real(wp), intent(in) :: x, alpha
+		real(wp), dimension(4) :: us
+		real(wp) :: u0, u1, u2, u3, S, C
 		
 		! evaluate hypertrig function
 		S = hypertrig_s(alpha*x**2)
@@ -44,8 +47,8 @@ contains
 	! evaluate hypertric cos
 	! =======================
 		implicit none
-		real, intent(in) :: z
-		real :: c
+		real(wp), intent(in) :: z
+		real(wp) :: c
 		
 		if (z > 0.0) then 
 			c = (1.0 - cos(sqrt(z)))/z
@@ -62,8 +65,8 @@ contains
 	! evaluate hypertric sin
 	! =======================
 		implicit none
-		real, intent(in) :: z
-		real :: s
+		real(wp), intent(in) :: z
+		real(wp) :: s
 		
 		if (z > 0.0) then 
 			s = (sqrt(z)-sin(sqrt(z))) / (sqrt(z))**3
@@ -81,11 +84,11 @@ contains
 	! ==========================================
 		
 		implicit none
-		real, intent(in) :: x, alpha, t, t0, sqrt_mu, r0_norm, sigma0
-		real, dimension(3) :: f_derivs_array
-		real, dimension(4) :: us
-		real :: u0, u1, u2, u3
-		real :: fun, dfun, d2fun
+		real(wp), intent(in) :: x, alpha, t, t0, sqrt_mu, r0_norm, sigma0
+		real(wp), dimension(3) :: f_derivs_array
+		real(wp), dimension(4) :: us
+		real(wp) :: u0, u1, u2, u3
+		real(wp) :: fun, dfun, d2fun
 		
 		us = universal_functions(x, alpha)
 		u0 = us(1)
@@ -106,9 +109,9 @@ contains
 	! compute Lagrange coefficients
 	! ==============================
 	implicit none
-	real :: sqrt_mu, alpha, r0, v0, sigma0, u0, u1, u2, u3, r, sigma
-	real, dimension(4) :: lagrange_coefs
-	real :: f, g, fdot, gdot
+	real(wp) :: sqrt_mu, alpha, r0, v0, sigma0, u0, u1, u2, u3, r, sigma
+	real(wp), dimension(4) :: lagrange_coefs
+	real(wp) :: f, g, fdot, gdot
 	
 	! evaluate scalar functions
 	f = 1.0 - u2/r0
@@ -126,18 +129,18 @@ contains
 	! Kepler-Der propagation of state
 	! ================================
 		implicit none
-		real, dimension(6), intent(in)  :: state0
-		real, intent(in)                :: mu, t0, t, tol
+		real(wp), dimension(6), intent(in)  :: state0
+		real(wp), intent(in)                :: mu, t0, t, tol
 		integer, intent(in)             :: maxiter
-		real, dimension(6), intent(out) :: state1
+		real(wp), dimension(6), intent(out) :: state1
 		
-		real :: alpha, sigma0, sqrt_mu, ecc, x0, x1, fun, dfun, d2fun, r0_norm, v0_norm
-		real, dimension(3) :: f_derivs_array
+		real(wp) :: alpha, sigma0, sqrt_mu, ecc, x0, x1, fun, dfun, d2fun, r0_norm, v0_norm
+		real(wp), dimension(3) :: f_derivs_array
 		integer :: counter
-		real, dimension(4) :: us, lagrange_coefs
-		real :: u0, u1, u2, u3, r_scal, sigma, f, fdot, g, gdot
+		real(wp), dimension(4) :: us, lagrange_coefs
+		real(wp) :: u0, u1, u2, u3, r_scal, sigma, f, fdot, g, gdot
 		integer :: i
-		real, dimension(6,6) :: statemap
+		real(wp), dimension(6,6) :: statemap
 		
 		! -------------------------------
 		! SET-UP PROBLEM
@@ -215,10 +218,15 @@ end module keplerder
 
 ! -----------------------------------------------------------
 program test_keplerder
+
+	use, intrinsic :: iso_fortran_env,    only: real64
 	use keplerder
 	implicit none
-	real, dimension(6) :: state1, state0
-	real :: mu, t0, t, tol
+	
+	integer, parameter :: wp = real64
+		
+	real(wp), dimension(6) :: state1, state0
+	real(wp) :: mu, t0, t, tol
 	integer :: maxiter
 	
 	print*, "Testing Kepler-Der module"

@@ -14,14 +14,17 @@
 
 ! -----------------------------------------------------------
 module orbitalelements
-
+	
+	use, intrinsic :: iso_fortran_env,    only: real64
 	use linalg
 	implicit none
 	private
 	public :: state2h, state2sma, state2ecc, state2inc, state2raan, state2aop, state2ta
 	public :: state2kepelts
 	public :: rad2deg, deg2rad
-	real(16), parameter :: pi_16 = 4 * atan (1.0_16)
+	
+	integer, parameter :: wp = real64
+	real(wp), parameter :: pi_16 = 4 * atan (1.0_16)
 	
 contains
 	
@@ -30,8 +33,8 @@ contains
 	! Convert state to angular momentum vector
 	! =========================================
 		implicit none
-		real, dimension(6), intent(in) :: state
-		real, dimension(3) :: hvec
+		real(wp), dimension(6), intent(in) :: state
+		real(wp), dimension(3) :: hvec
 		hvec = crossproduct(state(1:3), state(4:6))
 	end function state2h
 	
@@ -41,10 +44,10 @@ contains
 	! Convert state to eccentricity vector
 	! =======================================
 		implicit none
-		real, dimension(6), intent(in) :: state
-		real, intent(in) :: mu
-		real, dimension(3) :: hvec, ecc_vec
-		real :: ecc
+		real(wp), dimension(6), intent(in) :: state
+		real(wp), intent(in) :: mu
+		real(wp), dimension(3) :: hvec, ecc_vec
+		real(wp) :: ecc
 		
 		hvec = crossproduct(state(1:3), state(4:6))
     ecc_vec = (1/mu) * crossproduct(state(4:6),hvec) - state(1:3)/norm2_vec3(state(1:3))
@@ -57,9 +60,9 @@ contains
 	! Convert state to semi-major axis
 	! =======================================
 		implicit none
-		real, dimension(6), intent(in) :: state
-		real, intent(in) :: mu
-		real :: sma, h, ecc
+		real(wp), dimension(6), intent(in) :: state
+		real(wp), intent(in) :: mu
+		real(wp) :: sma, h, ecc
 		
 		h = norm2_vec3(crossproduct(state(1:3), state(4:6)))
 		ecc = state2ecc(state, mu)
@@ -72,9 +75,9 @@ contains
 	! Convert state to inclination
 	! =======================================
 		implicit none
-		real, dimension(6), intent(in) :: state
-		real, dimension(3) :: hvec
-		real :: inc
+		real(wp), dimension(6), intent(in) :: state
+		real(wp), dimension(3) :: hvec
+		real(wp) :: inc
 		
 		hvec = crossproduct(state(1:3), state(4:6))
 		inc = acos(hvec(3) / norm2_vec3(hvec))
@@ -87,9 +90,9 @@ contains
 	! Convert state to raan
 	! =======================================
 		implicit none
-		real, dimension(6), intent(in) :: state
-		real, dimension(3) :: hvec, zdir, ndir
-		real :: raan
+		real(wp), dimension(6), intent(in) :: state
+		real(wp), dimension(3) :: hvec, zdir, ndir
+		real(wp) :: raan
 		
 		hvec = crossproduct(state(1:3), state(4:6))
 		zdir = (/ 0.0, 0.0, 1.0 /)
@@ -109,10 +112,10 @@ contains
 	! Convert state to argument of periapsis
 	! =======================================
 		implicit none
-		real, dimension(6), intent(in) :: state
-		real, intent(in) :: mu
-		real, dimension(3) :: hvec, zdir, ndir, evec
-		real :: aop
+		real(wp), dimension(6), intent(in) :: state
+		real(wp), intent(in) :: mu
+		real(wp), dimension(3) :: hvec, zdir, ndir, evec
+		real(wp) :: aop
 		
 		hvec = crossproduct(state(1:3), state(4:6))
 		zdir = (/ 0.0, 0.0, 1.0 /)
@@ -136,9 +139,9 @@ contains
 	! Convert state to true anomaly
 	! =======================================
 		implicit none
-		real, dimension(6), intent(in) :: state
-		real, intent(in) :: mu
-		real, dimension(3) :: evec, hvec
+		real(wp), dimension(6), intent(in) :: state
+		real(wp), intent(in) :: mu
+		real(wp), dimension(3) :: evec, hvec
 		real ta, vr
 		
 		hvec = crossproduct(state(1:3), state(4:6))
@@ -160,8 +163,8 @@ contains
 	! Convert angle from radian to degrees
 	! =======================================
 		implicit none
-		real, intent(in) :: angle
-		real :: angle_deg
+		real(wp), intent(in) :: angle
+		real(wp) :: angle_deg
 		angle_deg = angle * 180.0 / pi_16
 	end function rad2deg
 	
@@ -171,8 +174,8 @@ contains
 	! Convert angle from degrees to radians
 	! =======================================
 		implicit none
-		real, intent(in) :: angle
-		real :: angle_rad
+		real(wp), intent(in) :: angle
+		real(wp) :: angle_rad
 		angle_rad = angle * pi_16 / 180.0
 	end function deg2rad
 	
@@ -184,9 +187,9 @@ contains
 	! elements order: [sma, inc, raan, ecc, aop, ta]
 	! ============================================
 		implicit none 
-		real, dimension(6), intent(in) :: state
-		real, intent(in) :: mu
-		real, dimension(6), intent(out) :: kepelts
+		real(wp), dimension(6), intent(in) :: state
+		real(wp), intent(in) :: mu
+		real(wp), dimension(6), intent(out) :: kepelts
 		
 		! in order: sma, inc, raan, ecc, aop, ta
 		kepelts(1) = state2sma(state, mu)
@@ -207,8 +210,8 @@ end module orbitalelements
 	! use orbitalelements
 	! implicit none
 	! integer :: foo, bar
-	! real, dimension(6) :: state, kepelts
-	! real :: mu, sma, ecc, inc, raan, aop, ta
+	! real(wp), dimension(6) :: state, kepelts
+	! real(wp) :: mu, sma, ecc, inc, raan, aop, ta
 	
 	! mu = 1.0
 	! state = (/ 1.0, 0.0, 0.2, 0.0, 0.98, 0.067 /)

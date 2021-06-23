@@ -3,19 +3,21 @@
 !
 
 module linalg
-
+	
+	use, intrinsic :: iso_fortran_env,    only: real64
 	implicit none
 	private
 	public :: crossproduct, norm2_vec3, dot_vec3, matmul6
-
+	integer, parameter :: wp = real64
+	
 contains
 
 	! -----------------------------------------
 	! Compute cross-product
 	function crossproduct(v1,v2) result(v3)
 		implicit none
-		real, dimension(3), intent(in) :: v1, v2
-		real, dimension(3) :: v3
+		real(wp), dimension(3), intent(in) :: v1, v2
+		real(wp), dimension(3) :: v3
 		v3(1) = v1(2) * v2(3) - v1(3) * v2(2)
 		v3(2) = v1(3) * v2(1) - v1(1) * v2(3)
 		v3(3) = v1(1) * v2(2) - v1(2) * v2(1)
@@ -26,8 +28,8 @@ contains
 	! Compute 2-norm of 3-element vector
 	function norm2_vec3(vector) result(norm_val)
 		implicit none
-		real, dimension(3) :: vector
-		real :: norm_val
+		real(wp), dimension(3) :: vector
+		real(wp) :: norm_val
 		
 		norm_val = (vector(1)**2 + vector(2)**2 + vector(3)**2)**0.5
 	end function norm2_vec3
@@ -36,8 +38,8 @@ contains
 	! Compute dot product of 3-element vector
 	function dot_vec3(v1, v2) result(dotpro)
 		implicit none
-		real, dimension(3) :: v1, v2
-		real :: dotpro
+		real(wp), dimension(3) :: v1, v2
+		real(wp) :: dotpro
 		
 		dotpro = v1(1)*v2(1) + v1(2)*v2(2) + v1(3)*v2(3)
 		
@@ -47,9 +49,9 @@ contains
 	! compute 6x6 matrix * length-6 vector
 	function matmul6(mat, vec) result(prod)
 		implicit none
-		real, dimension(6,6), intent(in) :: mat
-		real, dimension(6), intent(in) :: vec
-		real, dimension(6) :: prod
+		real(wp), dimension(6,6), intent(in) :: mat
+		real(wp), dimension(6), intent(in) :: vec
+		real(wp), dimension(6) :: prod
 		integer :: i
 		
 		do i = 1,6
@@ -65,7 +67,7 @@ end module linalg
 
 	! use linalg
 	! implicit none
-	! real, dimension(3) :: r1, r2, r3
+	! real(wp), dimension(3) :: r1, r2, r3
 	
 	! r1 = (/ 1.0, 2.0, 3.0 /)
 	! r2 = (/ 5.0, 7.0, -2.0 /)
