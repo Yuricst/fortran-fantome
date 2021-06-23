@@ -134,7 +134,7 @@ contains
 		real(wp), dimension(3) :: f_derivs_array
 		integer :: counter
 		real(wp), dimension(4) :: us, lagrange_coefs
-		real(wp) :: u0, u1, u2, u3, r_scal, sigma, f, fdot, g, gdot
+		real(wp) :: r_scal, sigma, f, fdot, g, gdot
 		integer :: i
 		real(wp), dimension(6,6) :: statemap
 		
@@ -180,16 +180,11 @@ contains
 		! COMPUTE FINAL POSITION
 		! -------------------------------
 		us = universal_functions(x1, alpha)
-		u0 = us(1)
-		u1 = us(2)
-		u2 = us(3)
-		u3 = us(4)
-		
-		r_scal = r0_norm*u0 + sigma0*u1 + u2
-		sigma = sigma0*u0 + (1 - alpha*r0_norm)*u1
+		r_scal = r0_norm*us(1) + sigma0*us(2) + us(3)
+		sigma = sigma0*us(1) + (1 - alpha*r0_norm)*us(2)
 
 		! get lagrange coefficients
-		lagrange_coefs = lagrange_coefficients(mu, alpha, r0_norm, v0_norm, sigma0, u0, u1, u2, u3, r_scal, sigma)
+		lagrange_coefs = lagrange_coefficients(mu, alpha, r0_norm, v0_norm, sigma0, us(1), us(2), us(3), us(4), r_scal, sigma)
 		f    = lagrange_coefs(1)
 		g    = lagrange_coefs(2)
 		fdot = lagrange_coefs(3)
@@ -207,31 +202,6 @@ contains
 		state1 = matmul(statemap, state0)
 		
 	end subroutine propagate
-	
-	
-	! subroutine testmod(b, n) bind(c, name="testmod")
-		! implicit none
-		! real*8, intent(in) :: n
-		! real*8, intent(out) :: b
-		! print*, "Hello world!!"
-		! b = 2*n
-	! end subroutine testmod
-	
-	subroutine test1(n,a,b,c) bind(c, name="test1")
-		implicit none
-		integer , intent(in) :: n
-		real*8, intent(in) :: a
-		real*8, intent(out) :: b, c
-
-		b = a**n
-		c = n*a
-
-		! 確認
-		print *, "b = ",b
-		print *, "c = ",c
-
-		return
-	end subroutine test1
 	
 end module keplerder
 
