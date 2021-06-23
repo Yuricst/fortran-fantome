@@ -183,7 +183,7 @@ contains
 	!
 	! elements order: [sma, inc, raan, ecc, aop, ta]
 	! ============================================
-		!implicit none 
+		implicit none 
 		real, dimension(6), intent(in) :: state
 		real, intent(in) :: mu
 		real, dimension(6), intent(out) :: kepelts
@@ -201,36 +201,36 @@ contains
 end module orbitalelements
 
 
-! -----------------------------------------------------------
-program test_orbel
+! ! -----------------------------------------------------------
+! program test_orbel
 
-	use orbitalelements
-	implicit none
-	integer :: foo, bar
-	real, dimension(6) :: state, kepelts
-	real :: mu, sma, ecc, inc, raan, aop, ta
+	! use orbitalelements
+	! implicit none
+	! integer :: foo, bar
+	! real, dimension(6) :: state, kepelts
+	! real :: mu, sma, ecc, inc, raan, aop, ta
 	
-	mu = 1.0
-	state = (/ 1.0, 0.0, 0.2, 0.0, 0.98, 0.067 /)
+	! mu = 1.0
+	! state = (/ 1.0, 0.0, 0.2, 0.0, 0.98, 0.067 /)
 	
-	inc = state2inc(state)
-	raan = state2raan(state)
-	sma = state2sma(state, mu)
-	ecc = state2ecc(state, mu)
-	aop = state2aop(state, mu)
-	ta  = state2ta(state, mu)
+	! inc = state2inc(state)
+	! raan = state2raan(state)
+	! sma = state2sma(state, mu)
+	! ecc = state2ecc(state, mu)
+	! aop = state2aop(state, mu)
+	! ta  = state2ta(state, mu)
 	
-	! print results
-	print*, "sma:  ", sma
-	print*, "ecc:  ", ecc
-	print*, "inc:  ", inc
-	print*, "raan: ", raan
-	print*, "aop:  ", aop
-	print*, "ta:   ", ta
+	! ! print results
+	! print*, "sma:  ", sma
+	! print*, "ecc:  ", ecc
+	! print*, "inc:  ", inc
+	! print*, "raan: ", raan
+	! print*, "aop:  ", aop
+	! print*, "ta:   ", ta
 	
-	! getting all elements from subroutine
-	call state2kepelts(kepelts, state, mu)
-	print*, kepelts
+	! ! getting all elements from subroutine
+	! call state2kepelts(kepelts, state, mu)
+	! print*, kepelts
 	
-end program test_orbel
+! end program test_orbel
 	

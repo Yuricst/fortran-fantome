@@ -6,7 +6,7 @@ module linalg
 
 	implicit none
 	private
-	public :: crossproduct, norm2_vec3, dot_vec3
+	public :: crossproduct, norm2_vec3, dot_vec3, matmul6
 
 contains
 
@@ -33,7 +33,7 @@ contains
 	end function norm2_vec3
 	
 	! ----------------------------------------
-	! Compute dor product of 3-element vector
+	! Compute dot product of 3-element vector
 	function dot_vec3(v1, v2) result(dotpro)
 		implicit none
 		real, dimension(3) :: v1, v2
@@ -42,6 +42,21 @@ contains
 		dotpro = v1(1)*v2(1) + v1(2)*v2(2) + v1(3)*v2(3)
 		
 	end function dot_vec3
+	
+	! ----------------------------------------
+	! compute 6x6 matrix * length-6 vector
+	function matmul6(mat, vec) result(prod)
+		implicit none
+		real, dimension(6,6), intent(in) :: mat
+		real, dimension(6), intent(in) :: vec
+		real, dimension(6) :: prod
+		integer :: i
+		
+		do i = 1,6
+			prod(i) = mat(i,1)*vec(1) + mat(i,2)*vec(2) + mat(i,3)*vec(3) + mat(i,4)*vec(4) + mat(i,5)*vec(5) + mat(i,6)*vec(6)
+		end do
+		
+	end function matmul6
 
 end module linalg
 
