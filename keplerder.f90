@@ -8,13 +8,12 @@
 module keplerder
 	
 	use, intrinsic :: iso_fortran_env,    only: real64
-	use linalg
+	!use linalg
 	use orbitalelements
 	
 	implicit none
 	private
 	public :: propagate
-	public :: test1
 	public :: universal_functions, hypertrig_c, hypertrig_s, kepler_der_function, lagrange_coefficients
 	integer, parameter :: wp = real64
 	
@@ -130,8 +129,8 @@ contains
 		integer, intent(in)                 :: maxiter
 		real(wp), dimension(6), intent(out) :: state1
 		
-		real(wp) :: alpha, sigma0, sqrt_mu, ecc, x0, x1, fun, dfun, d2fun, r0_norm, v0_norm
-		real(wp), dimension(3) :: f_derivs_array
+		real(wp) :: alpha, sigma0, sqrt_mu, ecc, x0, x1, r0_norm, v0_norm
+		real(wp), dimension(3) :: fs_arr
 		integer :: counter
 		real(wp), dimension(4) :: us, lagrange_coefs
 		real(wp) :: r_scal, sigma, f, fdot, g, gdot
@@ -142,10 +141,10 @@ contains
 		! SET-UP PROBLEM
 		! -------------------------------
 		sqrt_mu = sqrt(mu)
-		r0_norm = norm2_vec3(state0(1:3))
-		v0_norm = norm2_vec3(state0(4:6))
+		r0_norm = norm2(state0(1:3))
+		v0_norm = norm2(state0(4:6))
 		alpha   = 1/state2sma(state0, mu)
-		sigma0  = dot_vec3(state0(1:3), state0(4:6)) / sqrt_mu
+		sigma0  = dot_product(state0(1:3), state0(4:6)) / sqrt_mu
 	
 		! -------------------------------
 		! ITERATE LAGUERRE-CONWAY METHOD
@@ -155,22 +154,19 @@ contains
 		if (ecc < 1) then
 			x0 = alpha * sqrt_mu*(t-t0)
 		else
-			x0 = sqrt_mu * (t-t0) / (10*norm2_vec3(state0(1:3)))
+			x0 = sqrt_mu * (t-t0) / (10*norm2(state0(1:3)))
 		end if
 		! iterate
 		counter = 0
 		do while (counter < maxiter)
 			! compute kepler-der function
-			f_derivs_array = kepler_der_function(x0, alpha, t, t0, sqrt_mu, r0_norm, sigma0)
-			fun   = f_derivs_array(1)
-			dfun  = f_derivs_array(2)
-			d2fun = f_derivs_array(3)
+			fs_arr = kepler_der_function(x0, alpha, t, t0, sqrt_mu, r0_norm, sigma0)
 			! exit if tolerance is achieved
-			if (abs(fun) < tol) then
+			if (abs(fs_arr(1)) < tol) then
 				exit
 			end if
 			! Laguerre-Conway update
-			x1 = x0 - 5*fun / (dfun + dfun/abs(dfun) * sqrt(abs(16*dfun**2 - 20*fun*d2fun)) )
+			x1 = x0 - 5*fs_arr(1) / (fs_arr(2) + fs_arr(2)/abs(fs_arr(2)) * sqrt(abs(16*fs_arr(2)**2 - 20*fs_arr(1)*fs_arr(3))) )
 			! updates
 			x0 = x1
 			counter = counter + 1
