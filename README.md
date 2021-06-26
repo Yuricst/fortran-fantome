@@ -6,19 +6,19 @@ Fortran astrodynamics routines
 Compiling: 
 
 ```bash
-> gfortran linalg.f90 orbitalelements.f90
+gfortran linalg.f90 orbitalelements.f90
 ```
 
 or specifying the output executable name:
 
 ```bash
-$ gfortran -o orbel linalg.f90 orbitalelements.f90
+gfortran -o orbel linalg.f90 orbitalelements.f90
 ```
 
 then executing:
 
 ```bash
-$ a.exe
+./a.so
 ```
 
 ### Usage via Python
@@ -26,8 +26,8 @@ $ a.exe
 Prepare the module for python with 
 
 ```bash
-$ f2py -c linalg.90 orbitalelements.f90 -m orbel
-$ python -m numpy.f2py -c linalg.f90 orbitalelements.f90 -m orbel
+f2py -c linalg.90 orbitalelements.f90 -m orbel
+python -m numpy.f2py -c linalg.f90 orbitalelements.f90 -m orbel
 ```
 
 then use in Python:
