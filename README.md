@@ -1,5 +1,6 @@
-# fortran-astrodynamics
-Fortran astrodynamics routines
+# FANTOME: FortrAN TrajectOry ModulE
+
+Fortran astrodynamics module
 
 ### Orbital elements
 
