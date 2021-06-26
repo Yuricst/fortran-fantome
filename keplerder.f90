@@ -17,7 +17,9 @@ module keplerder
 	public :: universal_functions, hypertrig_c, hypertrig_s, kepler_der_function, lagrange_coefficients
 	integer, parameter :: wp = real64
 	
+	
 contains
+
 
 	function universal_functions(x, alpha) result(us)
 	! =============================
@@ -103,18 +105,18 @@ contains
 	! ==============================
 	! compute Lagrange coefficients
 	! ==============================
-	implicit none
-	real(wp) :: sqrt_mu, alpha, r0, v0, sigma0, u0, u1, u2, u3, r, sigma
-	real(wp), dimension(4) :: lagrange_coefs
-	real(wp) :: f, g, fdot, gdot
-	
-	! evaluate scalar functions
-	f = 1.0 - u2/r0
-	g = r0*u1 / sqrt_mu + sigma0*u2 / sqrt_mu
-	fdot = -sqrt_mu / (r*r0) * u1
-	gdot = 1.0 - u2/r
-	! store for output
-	lagrange_coefs = (/ f, g, fdot, gdot /)
+		implicit none
+		real(wp) :: sqrt_mu, alpha, r0, v0, sigma0, u0, u1, u2, u3, r, sigma
+		real(wp), dimension(4) :: lagrange_coefs
+		real(wp) :: f, g, fdot, gdot
+		
+		! evaluate scalar functions
+		f = 1.0 - u2/r0
+		g = r0*u1 / sqrt_mu + sigma0*u2 / sqrt_mu
+		fdot = -sqrt_mu / (r*r0) * u1
+		gdot = 1.0 - u2/r
+		! store for output
+		lagrange_coefs = (/ f, g, fdot, gdot /)
 	 
 	end function lagrange_coefficients
 	
@@ -154,7 +156,7 @@ contains
 		if (ecc < 1) then
 			x0 = alpha * sqrt_mu*(t-t0)
 		else
-			x0 = sqrt_mu * (t-t0) / (10*norm2(state0(1:3)))
+			x0 = sqrt_mu * (t-t0) / (10.0*norm2(state0(1:3)))
 		end if
 		! iterate
 		counter = 0
@@ -166,7 +168,7 @@ contains
 				exit
 			end if
 			! Laguerre-Conway update
-			x1 = x0 - 5*fs_arr(1) / (fs_arr(2) + fs_arr(2)/abs(fs_arr(2)) * sqrt(abs(16*fs_arr(2)**2 - 20*fs_arr(1)*fs_arr(3))) )
+			x1 = x0 - 5.0*fs_arr(1) / (fs_arr(2) + fs_arr(2)/abs(fs_arr(2)) * sqrt(abs(16.0*fs_arr(2)**2 - 20.0*fs_arr(1)*fs_arr(3))) )
 			! updates
 			x0 = x1
 			counter = counter + 1
