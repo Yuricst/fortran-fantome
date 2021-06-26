@@ -20,7 +20,6 @@ module keplerder
 	
 contains
 
-
 	function universal_functions(x, alpha) result(us)
 	! =============================
 	! Evaluate universal functions

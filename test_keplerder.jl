@@ -4,7 +4,7 @@ Test module on Julia
 Compile as:
 
 ```
-gfortran linalg.f90 orbitalelements.f90 keplerder.f90 -o keplerder.so -shared -fPIC
+gfortran linalg.f90 orbitalelements.f90 keplerder.f90 fantome.f90 -o fantome.so -shared -fPIC
 ```
 
 Tuto:
@@ -27,7 +27,7 @@ maxiter = Int32(10)
 
 println("state0: \n$state0")
 
-ccall((:propagate, "./keplerder.so"), Nothing,
+ccall((:propagate, "./fantome.so"), Nothing,
        (Ref{Float64}, Ref{Float64}, Ref{Float64},
         Ref{Float64}, Ref{Float64}, Ref{Float64}, Ref{Int32}),
        state1, mu, state0,
@@ -37,14 +37,14 @@ println("state1: \n$state1")
 
 ## Measure time
 # @time begin
-#         ccall((:propagate, "./keplerder.so"), Nothing,
+#         ccall((:propagate, "./fantome.so"), Nothing,
 #                (Ref{Float64}, Ref{Float64}, Ref{Float64},
 #                 Ref{Float64}, Ref{Float64}, Ref{Float64}, Ref{Int32}),
 #                state1, mu, state0,
 #                t0, t, tol, maxiter)
 # end
 
-@btime ccall((:propagate, "./keplerder.so"), Nothing,
+@btime ccall((:propagate, "./fantome.so"), Nothing,
        (Ref{Float64}, Ref{Float64}, Ref{Float64},
         Ref{Float64}, Ref{Float64}, Ref{Float64}, Ref{Int32}),
        state1, mu, state0,
