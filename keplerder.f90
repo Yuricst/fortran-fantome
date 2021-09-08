@@ -130,7 +130,7 @@ contains
         integer, intent(in)                 :: maxiter
         real(wp), dimension(6), intent(out) :: state1
         
-        real(wp) :: alpha, sigma0, sqrt_mu, ecc, x0, x1, r0_norm, v0_norm
+        real(wp) :: alpha, sigma0, sqrt_mu, ecc, x0, x1, r0_norm, v0_norm, denom
         real(wp), dimension(3) :: fs_arr
         integer :: counter
         real(wp), dimension(4) :: us, lagrange_coefs
@@ -167,7 +167,8 @@ contains
                 exit
             end if
             ! Laguerre-Conway update
-            x1 = x0 - 5.0*fs_arr(1) / (fs_arr(2) + fs_arr(2)/abs(fs_arr(2)) * sqrt(abs(16.0*fs_arr(2)**2 - 20.0*fs_arr(1)*fs_arr(3))) )
+            denom = fs_arr(2) + fs_arr(2)/abs(fs_arr(2)) * sqrt(abs(16.0*fs_arr(2)**2 - 20.0*fs_arr(1)*fs_arr(3)))
+            x1 = x0 - 5.0*fs_arr(1) / ( denom )
             ! updates
             x0 = x1
             counter = counter + 1
