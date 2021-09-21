@@ -30,7 +30,7 @@ println("state0: \n$state0")
 ccall((:propagate, "./fantome.so"), Nothing,
        (Ref{Float64}, Ref{Float64}, Ref{Float64},
         Ref{Float64}, Ref{Float64}, Ref{Float64}, Ref{Int32}),
-       state1, mu, state0,
+       mu, state0, state1, 
        t0, t, tol, maxiter)
 println("state1: \n$state1")
 
