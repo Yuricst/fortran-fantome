@@ -6,118 +6,118 @@
 !
 
 module keplerder
-	
-	use, intrinsic :: iso_fortran_env,    only: real64
-	!use linalg
-	use orbitalelements
-	
-	implicit none
-	private
-	public :: propagate
-	public :: universal_functions, hypertrig_c, hypertrig_s, kepler_der_function, lagrange_coefficients
-	integer, parameter :: wp = real64
-	
-	
+    
+    use, intrinsic :: iso_fortran_env,    only: real64
+    !use linalg
+    use orbitalelements
+    
+    implicit none
+    private
+    public :: propagate
+    public :: universal_functions, hypertrig_c, hypertrig_s, kepler_der_function, lagrange_coefficients
+    integer, parameter :: wp = real64
+    
+    
 contains
 
-	function universal_functions(x, alpha) result(us)
-	! =============================
-	! Evaluate universal functions
-	! =============================
-		implicit none
-		real(wp), intent(in) :: x, alpha
-		real(wp), dimension(4) :: us
-		real(wp) :: u0, u1, u2, u3, S, C
-		
-		! evaluate hypertrig function
-		S = hypertrig_s(alpha*x**2)
-		C = hypertrig_c(alpha*x**2)
-		
-		! parameters
-		u0 = 1 - alpha * x**2 * C
-		u1 = x*(1 - alpha * x**2 * S)
-		u2 = x**2 * C
-		u3 = x**3 * S
-		us = (/ u0, u1, u2, u3 /)
+    function universal_functions(x, alpha) result(us)
+    ! =============================
+    ! Evaluate universal functions
+    ! =============================
+        implicit none
+        real(wp), intent(in) :: x, alpha
+        real(wp), dimension(4) :: us
+        real(wp) :: u0, u1, u2, u3, S, C
+        
+        ! evaluate hypertrig function
+        S = hypertrig_s(alpha*x**2)
+        C = hypertrig_c(alpha*x**2)
+        
+        ! parameters
+        u0 = 1 - alpha * x**2 * C
+        u1 = x*(1 - alpha * x**2 * S)
+        u2 = x**2 * C
+        u3 = x**3 * S
+        us = (/ u0, u1, u2, u3 /)
 
-	end function universal_functions
-
-
-	function hypertrig_c(z) result(c)
-	! =======================
-	! evaluate hypertric cos
-	! =======================
-		implicit none
-		real(wp), intent(in) :: z
-		real(wp) :: c
-		
-		if (z > 0.0) then 
-			c = (1.0 - cos(sqrt(z)))/z
-		elseif (z < 0.0) then
-			c = (cosh(-z) - 1)/(-z)
-		else
-			c = 0.5
-		end if
-	end function hypertrig_c
+    end function universal_functions
 
 
-	function hypertrig_s(z) result(s)
-	! =======================
-	! evaluate hypertric sin
-	! =======================
-		implicit none
-		real(wp), intent(in) :: z
-		real(wp) :: s
-		
-		if (z > 0.0) then 
-			s = (sqrt(z)-sin(sqrt(z))) / (sqrt(z))**3
-		elseif (z < 0.0) then
-			s = (sinh(sqrt(-z)) - sqrt(-z)) / (sqrt(-z))**3
-		else
-			s = 1.0/6.0
-		end if
-	end function hypertrig_s
+    function hypertrig_c(z) result(c)
+    ! =======================
+    ! evaluate hypertric cos
+    ! =======================
+        implicit none
+        real(wp), intent(in) :: z
+        real(wp) :: c
+        
+        if (z > 0.0) then 
+            c = (1.0 - cos(sqrt(z)))/z
+        elseif (z < 0.0) then
+            c = (cosh(-z) - 1)/(-z)
+        else
+            c = 0.5
+        end if
+    end function hypertrig_c
 
 
-	function kepler_der_function(x, alpha, t, t0, sqrt_mu, r0_norm, sigma0) result(f_derivs_array)
-	! ==========================================
-	! Kepler-Der function, 1st, 2nd derivatives
-	! ==========================================
-		
-		implicit none
-		real(wp), intent(in) :: x, alpha, t, t0, sqrt_mu, r0_norm, sigma0
-		real(wp), dimension(3) :: f_derivs_array
-		real(wp), dimension(4) :: us
-		real(wp) :: fun, dfun, d2fun
-		
-		us = universal_functions(x, alpha)
-		
-		fun   = r0_norm*us(2) + sigma0*us(3) + us(4) - sqrt_mu * (t - t0)
-		dfun  = r0_norm*us(1) + sigma0*us(2) + us(3)
-		d2fun = sigma0*us(1) + (1 - alpha*r0_norm)*us(2)
-		f_derivs_array = (/ fun, dfun, d2fun /)
-		 
-	end function kepler_der_function
+    function hypertrig_s(z) result(s)
+    ! =======================
+    ! evaluate hypertric sin
+    ! =======================
+        implicit none
+        real(wp), intent(in) :: z
+        real(wp) :: s
+        
+        if (z > 0.0) then 
+            s = (sqrt(z)-sin(sqrt(z))) / (sqrt(z))**3
+        elseif (z < 0.0) then
+            s = (sinh(sqrt(-z)) - sqrt(-z)) / (sqrt(-z))**3
+        else
+            s = 1.0/6.0
+        end if
+    end function hypertrig_s
 
-	
+
+    function kepler_der_function(x, alpha, t, t0, sqrt_mu, r0_norm, sigma0) result(f_derivs_array)
+    ! ==========================================
+    ! Kepler-Der function, 1st, 2nd derivatives
+    ! ==========================================
+        
+        implicit none
+        real(wp), intent(in) :: x, alpha, t, t0, sqrt_mu, r0_norm, sigma0
+        real(wp), dimension(3) :: f_derivs_array
+        real(wp), dimension(4) :: us
+        real(wp) :: fun, dfun, d2fun
+        
+        us = universal_functions(x, alpha)
+        
+        fun   = r0_norm*us(2) + sigma0*us(3) + us(4) - sqrt_mu * (t - t0)
+        dfun  = r0_norm*us(1) + sigma0*us(2) + us(3)
+        d2fun = sigma0*us(1) + (1 - alpha*r0_norm)*us(2)
+        f_derivs_array = (/ fun, dfun, d2fun /)
+         
+    end function kepler_der_function
+
+
 	function lagrange_coefficients(sqrt_mu, alpha, r0, v0, sigma0, u0, u1, u2, u3, r, sigma) result(lagrange_coefs)
-	! ==============================
-	! compute Lagrange coefficients
-	! ==============================
-		implicit none
-		real(wp) :: sqrt_mu, alpha, r0, v0, sigma0, u0, u1, u2, u3, r, sigma
-		real(wp), dimension(4) :: lagrange_coefs
-		real(wp) :: f, g, fdot, gdot
-		
-		! evaluate scalar functions
-		f = 1.0 - u2/r0
-		g = r0*u1 / sqrt_mu + sigma0*u2 / sqrt_mu
-		fdot = -sqrt_mu / (r*r0) * u1
-		gdot = 1.0 - u2/r
-		! store for output
-		lagrange_coefs = (/ f, g, fdot, gdot /)
-	 
-	end function lagrange_coefficients
+    ! ==============================
+    ! compute Lagrange coefficients
+    ! ==============================
+        implicit none
+        real(wp) :: sqrt_mu, alpha, r0, v0, sigma0, u0, u1, u2, u3, r, sigma
+        real(wp), dimension(4) :: lagrange_coefs
+        real(wp) :: f, g, fdot, gdot
+        
+        ! evaluate scalar functions
+        f = 1.0 - u2/r0
+        g = r0*u1 / sqrt_mu + sigma0*u2 / sqrt_mu
+        fdot = -sqrt_mu / (r*r0) * u1
+        gdot = 1.0 - u2/r
+        ! store for output
+        lagrange_coefs = (/ f, g, fdot, gdot /)
+     
+    end function lagrange_coefficients
 	
 	
 	subroutine propagate(mu, state0, state1, t0, t, tol, maxiter) bind(c, name="propagate")
@@ -180,32 +180,31 @@ contains
 		r_scal = r0_norm*us(1) + sigma0*us(2) + us(3)
 		sigma = sigma0*us(1) + (1 - alpha*r0_norm)*us(2)
 
-		! get lagrange coefficients
-		lagrange_coefs = lagrange_coefficients(mu, alpha, r0_norm, v0_norm, sigma0, us(1), us(2), us(3), us(4), r_scal, sigma)
-		f    = lagrange_coefs(1)
-		g    = lagrange_coefs(2)
-		fdot = lagrange_coefs(3)
-		gdot = lagrange_coefs(4)
-		
-		! create state map
-		statemap = 0.0
-		do i = 1,3
-			statemap(i,i)     = f
-			statemap(i,3+i)   = g
-			statemap(3+i,i)   = fdot
-			statemap(3+i,3+i) = gdot
-		end do
-		! propagate state
-		state1 = matmul(statemap, state0)
-		
-	end subroutine propagate
-	
+        ! get lagrange coefficients
+        lagrange_coefs = lagrange_coefficients(mu, alpha, r0_norm, v0_norm, sigma0, us(1), us(2), us(3), us(4), r_scal, sigma)
+        f    = lagrange_coefs(1)
+        g    = lagrange_coefs(2)
+        fdot = lagrange_coefs(3)
+        gdot = lagrange_coefs(4)
+        
+        ! create state map
+        statemap = 0.0
+        do i = 1,3
+            statemap(i,i)     = f
+            statemap(i,3+i)   = g
+            statemap(3+i,i)   = fdot
+            statemap(3+i,3+i) = gdot
+        end do
+        ! propagate state
+        state1 = matmul(statemap, state0)
+        
+    end subroutine propagate
+    
 end module keplerder
 
 
 ! ! -----------------------------------------------------------
 ! program test_keplerder
-
 ! 	use, intrinsic :: iso_fortran_env,    only: real64
 ! 	use keplerder
 ! 	implicit none

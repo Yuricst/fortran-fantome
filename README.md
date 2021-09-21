@@ -1,6 +1,6 @@
 # FANTOME: FortrAN TrajectOry ModulE
 
-Fortran astrodynamics module
+Fortran astrodynamics module for trajectory design
 
 ### Orbital elements
 
