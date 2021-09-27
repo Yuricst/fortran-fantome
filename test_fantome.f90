@@ -1,10 +1,10 @@
 !
 ! Compile as:
-! > gfortran linalg.f90 orbitalelements.f90 keplerder.f90 fantome.f90 test_fantome.f90 -o run.so
+! > gfortran linalg.f90 orbitalelements.f90 keplerder.f90 simsflanagan.f90 fantome.f90 test_fantome.f90 -o run.so
 !
 ! -----------------------------------------------------------
 
-program test_keplerder
+program test_fantome
 
 	use, intrinsic :: iso_fortran_env,    only: real64
 	use fantom
@@ -18,7 +18,7 @@ program test_keplerder
 	
 	print*, "Testing Fantome module"
 
-	! initial values
+	! propagate trajectory
 	mu = 1.0_wp
 	t0 = 0.0_wp
 	t = 3.14_wp
@@ -33,5 +33,7 @@ program test_keplerder
 	call propagate(mu, state0, state1, t0, t, tol, maxiter)
 	print*, "state1: "
 	print*, state1
+
+	! evaluate Sims-Flanagan problem
 	
-end program test_keplerder
+end program test_fantome
